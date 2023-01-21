@@ -40,12 +40,13 @@ return Results.Created($"/products/{product.Id}", product.Id);
 });
 
 //api.app.com/user/{code}
-app.MapGet("/products/{code}", ([FromRoute] string code ) =>{
-       var product = ProductRepository.GetBy(code);
-       if(product != null)
-              return Results.Ok(product);
-
-       return Results.NotFound();
+app.MapGet("/products/{id}", ([FromRoute] int id, ApplicationDbContext context ) => {
+        var product = context.Products.Where(p => p.Id == id).First();
+            
+        if(product != null) {
+               return Results.Ok(product);
+       }
+        return Results.NotFound();
 });
 
 
